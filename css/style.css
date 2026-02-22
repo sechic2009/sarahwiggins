@@ -492,7 +492,7 @@ video {
 .staff-lines span:nth-last-of-type(1) {
   background: none;
 }
-.menuOPEN .staff-lines span {
+.menuOPEN .nav-header .staff-lines span {
   height: calc(25vh - 12px);
   border-top-width: 3px;
   transition: height 0.4s 0.6s, border-top 0.4s 0.6s;
@@ -1296,4 +1296,31 @@ a.service-button {
   }
 }
 
+/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&  404 NOT FOUND                                         &&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 
+/*  NOT FOUND
+----------------------------------------------------------*/
+.view-wrapper section.notfound {
+  width: 100%;
+  grid-template-columns: 1fr;
+  isolation: isolate;
+}
+
+.notfound .service-button {
+  width: 200px;
+  display: inline-block;
+  margin-top: 24px;
+}
+
+.notfound .staff-lines {
+  width: 100%;
+  margin-top: 40vh;
+  position: relative;
+  transform: translate(-100%, -50%) scale(4.0);
+}
+
+.notfound .staff-lines span {
+  background: none;
+}
