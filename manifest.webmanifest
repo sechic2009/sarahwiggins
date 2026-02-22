@@ -1,0 +1,15 @@
+{
+  "short_name": "SW",
+  "name": "Sarah Wiggins",
+  "description": "Music Educator",
+  "icons": [
+    {
+      "src": "images/ui/sw-app.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#101e5a",
+  "display": "minimal-ui"
+}
