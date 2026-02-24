@@ -8,89 +8,20 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="author" content="Sarah Elizabeth Wiggins">
-    <meta name="description" content="Sarah E. Wiggins | Music Educator">
+    <meta name="description" content="Sarah E. Wiggins | Music Educator & Vocalist">
 
-    <title>Sarah E. Wiggins | Music Educator</title>
+    <title>Sarah E. Wiggins | Music Educator & Vocalist</title>
 
-<style>
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        border: 0 solid;
-    }
+    <link type="text/css" rel="stylesheet" href="css/style.css"/>
 
-    body {
-        background: #f2f2ea;
-        color: #060606;
-        text-align: center;
-        padding: 48px;
-        font-family: Helvetica, Arial, sans-serif;
-    }
-    .logo-mark {
-        -webkit-user-select: none;
-        user-select: none;
-        width: 140px;
-        height: 32px;
-        display: block;
-        border: 0;
-        border-radius: 0;
-        outline: 0;
-        padding: 0;
-        background: transparent;
-        text-align: left;
-        margin: 0 auto;
-        
-    }
-    h1 {
-        font-size: 36px;
-        color: #dfd188;
-        font-weight: normal;
-        margin: 48px 0;
-    }
-    a {
-        text-decoration: none;
-        transition: color 0.1s ease;
-        cursor: pointer;
-    }
-    a:link, a:visited {
-        color: inherit;
-    }
-    a:hover, a:active, a:focus {
-        color: #e5a0a0;
-    }
-    .footer-links {
-        margin-top: 48px;
-        padding-bottom: 80px;
-    }
-    .footer-links label {
-        display: block;
-        width: 180px;
-        margin: 0 auto 12px auto;
-        border-bottom: 1px solid #060606;
-    }
-    .footer-links ul li{
-        list-style: none;
-        font-size: 16px;
-        margin-top: 8px;
-    }
-    .copyright {
-        position: fixed;
-        height: 48px;
-        left: 0;
-        bottom: 0;
-        font-size: 12px;
-        width: 100%;
-        line-height: 48px;
-        background: #dfd188;
-    }
-</style>
+    <link rel="apple-touch-icon" href="/images/ui/wiggins-app.png"/>
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/ui/favicon.png">
+    <link rel="shortcut icon" href="/images/ui/favicon.ico"/>
 </head>
+
 <body class="body">
+<header class="global-header">
     <a class="logo-mark" href="/" title="Home">
         <i>
             <svg viewBox="0 0 175 32">
@@ -108,10 +39,88 @@
               <path d="M165.99,19.55c0,1.12.27,1.97.82,2.55.55.58,1.32.87,2.33.87.64,0,1.18-.21,1.63-.62.45-.42.67-.91.67-1.48s-.2-1.09-.61-1.56c-.41-.47-.89-.95-1.46-1.43-.48-.42-.96-.85-1.43-1.3-.47-.45-.87-.93-1.18-1.45-.32-.51-.48-1.08-.48-1.69,0-.83.24-1.59.71-2.28.47-.69,1.1-1.25,1.89-1.68.79-.43,1.63-.64,2.53-.64.74,0,1.42.11,2.02.34.6.23,1.06.55,1.36.97-.13.39-.31.84-.54,1.35-.23.5-.42.91-.57,1.22h-.46c-.24-.72-.61-1.29-1.12-1.69-.5-.41-1.08-.61-1.74-.61-.53,0-.97.17-1.33.51-.36.34-.54.76-.54,1.26,0,.35.09.69.28,1.02.19.33.42.65.71.95.37.39.79.79,1.26,1.18.47.39.93.8,1.36,1.23.44.43.8.89,1.08,1.38.28.49.43,1.04.43,1.63,0,.83-.26,1.63-.77,2.38-.51.76-1.18,1.36-2,1.82-.82.46-1.7.69-2.64.69-1.01,0-1.86-.16-2.55-.49-.69-.33-1.12-.78-1.3-1.35.09-.33.2-.7.34-1.1.14-.41.29-.79.44-1.15.15-.36.28-.64.39-.84h.46Z"/>
             </svg>
         </i>
+        <label><span>Sarah Wiggins</span></label>
     </a>
-    <h1>My site is currently undergoing a redesign!</h1>
-    <p>Please check back later.</p>
-    <p>If you are inquiring about lessons, please contact me.</p>
+    <div id="staffBar" class="nav-header">
+        <i class="staff-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </i>
+        <button aria-label="navigation menu" type="button" id="menuIcon" class="menu-icon">
+            <i>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </i>
+            <label></label>
+        </button>
+        <div class="header-title"><span>Music Educator</span></div>
+    </div>
+</header>
+<div class="global-navigation">
+    <nav class="navigation">
+        <ul class="nav-main">
+            <li><a href="/">Music Educator</a></li>
+            <li><a href="/career.html">My Career</a></li>
+            <li><a href="/music.html">Music Samples</a></li>
+            <li><a href="/lessons.html">Lessons & Coaching</a></li>
+        </ul>
+    </nav>
+</div>
+<main class="global-view">
+    <div class="view-wrapper">
+        <div class="scrollMARKER"></div>
+        <section class="introduction">
+            <div class="audio-player">
+                <audio id="audioPlayer"></audio>
+            </div>
+            <div class="basic-player">
+                <button data-src="content/WigginsVoice.mp3" class="player-button"></button>
+                <label>Listen</label>
+            </div>
+            <h1>"I'm not a teacher, but an awakener."<span>— Robert Frost</span></h1>
+            <div class="intro-image">
+                <img src="images/webp/sarahwiggins.webp" alt="Sarah Wiggins Music Educator">
+            </div>
+            <i class="staff-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </i>
+        </section>
+        <section class="greeting">
+            <div class="main-content">
+                <h2>Educator and Professional Vocalist</h2>
+                <p>I would love to work with you! My focus is to work for the betterment of student musicianship and contribute to an organization's success through the use of my exceptional teaching, conducting, and managerial skills.</p>
+            </div>
+        </section>
+        <section class="overview">
+            <div class="main-content">
+                <img src="images/webp/2011_IMSA_ArtInstitute_01.webp" alt="Conducting at the Art Institute of Chicago">
+                <figcaption>Performing at the Art Institute Modern Wing opening</figcaption>
+            </div>
+            <div class="sub-content">
+                <p>As a music educator, privately and publicly, I offer personal/group voice lessons utilizing basics of piano, musical notation and vocal tone mapping here in the greater Chicago region. Other services: Adjudication, Choral Seminars, Public Speaking seminars on Vocal Tone Mapping, and Suzuki Music in Motion</p>
+                <blockquote>Sarah has excelled because she perfectly balances high standards and structure with warmth, nurturing and responsiveness.<span>Glenn W. “Max” McGee</span></blockquote>
+                <h2>Currently working and residing in Chicago!</h2>                
+                <p>If you are looking for vocal coacing or instruction, please don't hesitate to reach out. I work with singers of all ages and skill levels. Or, if you just want to spark a creative chat, feel free to drop me a line.</p>
+                <ul class="contact-box">
+                    <h3>How to Reach Me</h3>
+                    <li>Email: <a href="mailto:sechic2009@gmail.com">sechic2009@gmail.com</a></li>
+                    <li>Phone: <a href="tel:302-268-7400">302.268.7400</a></li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</main>
+<footer class="global-footer">
     <div class="footer-links">
         <ul>
             <label>Contact</label>
@@ -119,7 +128,18 @@
             <li><a href="tel:302-268-7400">302.268.7400</a></li>
         </ul>
     </div>
-    <div class="copyright">
-        <p>© 2026 Sarah Elizabeth Wiggins</p>
+    <div class="footer-links">
+        <ul>
+            <label>Social</label>
+            <li><a href="https://www.facebook.com/share/1Cuim9twGT/" target="_blank" rel="noopener">Facebook</a></li>
+            <li><a href="https://www.linkedin.com/in/sarah-wiggins-03173a43" target="_blank" rel="noopener">Linked In</a></li>
+        </ul>
     </div>
+    <div class="copyright">
+        <p>© <span id="currentYear"></span> Sarah Elizabeth Wiggins</p>
+    </div>
+    
+</footer>
+<script src="scripts/global-scripts.js"></script>
+</body>
 </html>
