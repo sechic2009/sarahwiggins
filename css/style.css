@@ -379,6 +379,12 @@ video {
   padding: 10px 20px;
   color: var(--black);
 }
+
+@media screen and (max-width: 500px) {
+  .header-title span {
+    display: none;
+  }
+}
 .header-title span {
   opacity: 1;
   transition: opacity 0.5s 0.4s;
