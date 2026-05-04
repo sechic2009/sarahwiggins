@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiggins Cusser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,600;0,800;1,400;1,600&family=Alegreya+Sans:ital,wght@0,400;0,600;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --left-bg: #fcf5c4;
+            --right-bg: #ffe29e;
+            --text-color: #060606;
+            --button-bg: #ffffff;
+            --button-text: #060606;
+            --mask-start: 35%;
+            --mask-end: 65%;
+        }
+
+        body, html {
+            margin: 0; 
+            padding: 0;
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; 
+            background-color: var(--left-bg);
+        }
+
+        .machine-container { 
+            display: flex; 
+            height: 100vh; 
+            width: 100vw; 
+        }
+
+        .slot-window {
+            flex: 1; 
+            height: 100%;
+            position: relative; 
+            overflow: hidden;
+        }
+
+        .left-half { 
+            background-color: var(--left-bg); 
+        }
+
+        .right-half { 
+            background-color: var(--right-bg); 
+        }
+
+        .left-half::after, .right-half::after {
+            content: ''; 
+            position: absolute; 
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10; 
+            pointer-events: none;
+        }
+
+        .left-half::after {
+            background: linear-gradient(
+                var(--left-bg) 0%, 
+                var(--left-bg) var(--mask-start),
+                transparent 45%, transparent 55%, 
+                var(--left-bg) var(--mask-end),
+                var(--left-bg) 100%
+            );
+        }
+
+        .right-half::after {
+            background: linear-gradient(
+                var(--right-bg) 0%, 
+                var(--right-bg) var(--mask-start),
+                transparent 45%, transparent 55%, 
+                var(--right-bg) var(--mask-end),
+                var(--right-bg) 100%
+            );
+        }
+
+        .slot-strip {
+            position: absolute; 
+            width: 100%; 
+            left: 0; top: 0;
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        .word-item {
+            display: flex; 
+            align-items: center; 
+            justify-content: left;
+            width: 100%; 
+            color: var(--text-color); 
+            text-transform: capitalize;
+            font-size: clamp(1.8rem, 11vw, 4.5rem);
+            box-sizing: border-box;
+            line-height: 1;
+        }
+
+        .word-item span { 
+            font-size: .4em; 
+            margin: 1em 0 0 .4em; 
+        }
+
+        .left-half .word-item { 
+            justify-content: right; 
+            padding-right: 2vw; 
+        }
+
+        .right-half .word-item { 
+            padding-left: 2vw; 
+        }
+
+        #spinBtn {
+            position: fixed; 
+            bottom: 40px; 
+            left: 50%;
+            transform: translateX(-50%); 
+            z-index: 100;
+            padding: 16px 40px; 
+            font-size: 1.6rem;
+            font-family: 'Alegreya', serif; 
+            font-weight: 400;
+            font-style: italic;
+            background: var(--button-bg);
+            color: var(--button-text);
+            border: 2px solid var(--button-text);
+            border-radius: 50px;
+            cursor: pointer; 
+            box-shadow: 0 4px 0 var(--button-text);
+            transition: transform 0.1s;
+        }
+
+        #spinBtn:active { 
+            transform: translateX(-50%) translateY(2px); 
+            box-shadow: inset 0 4px 0 var(--button-text); 
+        }
+
+        #spinBtn:disabled { 
+            opacity: .6; 
+            box-shadow: inset 0 4px 0 var(--button-text); 
+            cursor: not-allowed;
+        }
+
+        .control-btn {
+            position: fixed;
+            bottom: 40px;
+            width: 45px;
+            height: 45px;
+            background: var(--button-bg);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.2s;
+        }
+
+        #volumeBtn { 
+            left: 40px; 
+        }
+
+        #replayBtn { 
+            right: 40px; 
+        }
+
+        .control-btn:hover:not(:disabled) { 
+            opacity: 0.8; 
+        }
+        
+        .control-btn:disabled { 
+            opacity: 0.3; 
+            cursor: not-allowed; 
+        }
+
+        .control-btn svg { 
+            width: 24px; 
+            height: 24px; f
+            ill: var(--text-color); 
+        }
+
+        .v-1 { font-family: 'Alegreya', serif; font-weight: 400; font-style: italic; }
+        .v-2 { font-family: 'Alegreya', serif; font-weight: 600; }
+        .v-3 { font-family: 'Alegreya', serif; font-weight: 800; font-style: italic; }
+        .v-4 { font-family: 'Alegreya Sans', sans-serif; font-weight: 400; }
+        .v-5 { font-family: 'Alegreya Sans', sans-serif; font-weight: 600; font-style: italic; }
+        .v-6 { font-family: 'Alegreya Sans', sans-serif; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <div class="machine-container">
+        <div class="slot-window left-half"><div id="strip1" class="slot-strip"></div></div>
+        <div class="slot-window right-half"><div id="strip2" class="slot-strip"></div></div>
+    </div>
+
+    <button id="volumeBtn" class="control-btn" title="Toggle Speech">
+        <svg id="volumeIcon" viewBox="0 0 24 24">
+            </svg>
+    </button>
+
+    <button id="replayBtn" class="control-btn" title="Replay" disabled>
+        <svg viewBox="0 0 24 24">
+            <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+        </svg>
+    </button>
+
+    <button id="spinBtn">Cuss</button>
+
+    <script>
+        const adj = ["Shit", "Fuck", "Cock", "Ass", "Dick", "Twat", "Cunt", "Piss", "Douche", "Wank", "Jerk", "Bitch", "Slut", "Whore", "Balls", "Prick", "Turd", "Chode", "Clit", "Gash", "Skank", "Anal", "Rectal", "Shaft", "Knob", "Schlong", "Bell", "Sack", "Rim", "Taint", "Nut", "Sperm", "Jizz", "Spooge", "Snot", "Puke", "Barf", "Scum", "Dirt", "Filth", "Trash", "Waste", "Sewer", "Crap", "Butt", "Arse", "Nipple", "Dong", "Boner", "Wang", "Pecker", "Wiener", "Penis", "Rod", "Tube", "Snake", "Meat", "Beef", "Neck", "Ham", "Salami", "Sausage", "Log", "Stool", "Dump", "Load", "Squirt", "Spray", "Leak", "Drip", "Ooze", "Slime", "Gunk", "Goo", "Crust", "Scab", "Pus", "Boil", "Wart", "Mole", "Fart", "Belch", "Gas", "Slobber", "Queef", "Snatch", "Crotch", "Groin", "Lap", "Rear", "Back", "Hole", "Crack", "Slot", "Tit", "Drain", "Pipe", "Hose", "Pump", "Juice", "Milk", "Cream", "Butter", "Grease", "Hair", "Fat", "Lard", "Blubber", "Flesh", "Skin", "Bone", "Brain", "Head", "Face", "Mouth", "Tongue", "Throat", "Lip", "Ear", "Eye", "Nose", "Toe", "Foot", "Hand", "Fist", "Finger", "Thumb", "Arm", "Leg", "Boob", "Doofus", "Power", "Scuba", "Music", "Piano", "Note", "Plug", "Tofu", "Gristle", "Muck", "Stench", "Vomit", "Phlegm", "Gurgle", "Spigot", "Spout"];
+        const noun = ["Fucker", "Sucker", "Licker", "Guzzler", "Gobbler", "Shitter", "Wanker", "Jerker", "Boner", "Donger", "Snatcher", "Twatter", "Cunter", "Pisser", "Slutter", "Whorer", "Pricker", "Herder", "Slurper", "Choker", "Stroker", "Shafter", "Schlonger", "Tapper", "Jobber", "Sniffer", "Cruncher", "Jizzer", "Spooger", "Bagger", "Shrimp", "Wiper", "Twister", "Puller", "Swinger", "Biter", "Handler", "Rider", "Jazzer", "Steamer", "Charmer", "Beater", "Tugger", "Slapper", "Smuggler", "Jammer", "Pusher", "Taker", "Monster", "Blower", "Gunner", "Painter", "Plugger", "Feeder", "Baller", "Stirrer", "Goblin", "Picker", "Popper", "Rubber", "Passer", "Catcher", "Rotter", "Grabber", "Dancer", "Ender", "Diver", "Filler", "Cleaner", "Squeezer", "Churner", "Slicker", "Render", "Bucket", "Nugget", "Flayer", "Crusher", "Drainer", "Sitter", "Breather", "Lasher", "Smacker", "Gouger", "Fetisher", "Pumper", "Banger", "Twiddler", "Humper", "Stacker", "Tightener", "Driver", "Turner", "Grinder", "Swisher", "Polisher", "Shiner", "Burglar", "Juggler", "Nozzle", "Pirate", "Banker", "Mopper", "Vomiter", "Dabber", "Lurker", "Peeper", "Lover", "Fighter", "Bloater", "Mucker", "Swiller", "Gunker", "Sludger", "Pointer", "Squinter", "Bender", "Crawler", "Giggler", "Stabber", "Spanker", "Dunker", "Whinner", "Barker", "Growler", "Snorter", "Wheezer", "Funker", "Fluffer", "Turtle", "Whale", "Whipper", "Drawer", "Giraffe", "Pooper"];
+
+        const strip1 = document.getElementById('strip1');
+        const strip2 = document.getElementById('strip2');
+        const btn = document.getElementById('spinBtn');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const replayBtn = document.getElementById('replayBtn');
+
+        const repeats = 5;
+        let isFirstLoad = true;
+        let currentIdx1 = 0; 
+        let currentIdx2 = 0;
+        let lastWord1 = "";
+        let lastWord2 = "";
+
+        let isSpeechEnabled = false; 
+        let preferredVoice = null;
+        const iconOn = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+        const iconOff = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+        
+        volumeIcon.innerHTML = iconOff;
+
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                preferredVoice = voices.find(v => v.lang.includes('en-GB') && v.name.includes('Google')) || 
+                                 voices.find(v => v.lang.includes('en-GB'));
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+        }
+
+        function speakResult(word1, word2) {
+            if (!isSpeechEnabled || !('speechSynthesis' in window)) return;
+            if (!word1 || !word2) return;
+
+            if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(`${word1} ${word2}`);
+            if (!preferredVoice) loadVoices();
+            if (preferredVoice) utterance.voice = preferredVoice;
+            
+            utterance.pitch = 1.0;
+            utterance.rate = 0.8; 
+
+            setTimeout(() => {
+                window.speechSynthesis.speak(utterance);
+            }, 50); 
+        }
+
+        volumeBtn.addEventListener('click', () => {
+            isSpeechEnabled = !isSpeechEnabled;
+            volumeIcon.innerHTML = isSpeechEnabled ? iconOn : iconOff;
+            if (isSpeechEnabled) {
+                const flare = new SpeechSynthesisUtterance("");
+                window.speechSynthesis.speak(flare);
+                loadVoices();
+            } else {
+                window.speechSynthesis.cancel();
+            }
+        });
+
+        replayBtn.addEventListener('click', () => {
+            if (lastWord1 && lastWord2) {
+                if (!isSpeechEnabled) {
+                    isSpeechEnabled = true;
+                    volumeIcon.innerHTML = iconOn;
+                }
+                speakResult(lastWord1, lastWord2);
+            }
+        });
+
+        let speechUnlocked = false;
+        function unlockAudio() {
+            if (speechUnlocked) return;
+            const silent = new SpeechSynthesisUtterance('');
+            window.speechSynthesis.speak(silent);
+            loadVoices();
+            speechUnlocked = true;
+            window.removeEventListener('touchstart', unlockAudio);
+            window.removeEventListener('click', unlockAudio);
+        }
+        window.addEventListener('touchstart', unlockAudio);
+        window.addEventListener('click', unlockAudio);
+
+        // Strip & Spin logic
+        function buildStrips(includeHello = false) {
+            let h1 = `<div class="word-item"></div><div class="word-item"></div>`;
+            let h2 = `<div class="word-item"></div><div class="word-item"></div>`;
+
+            if (includeHello) {
+                h1 += `<div class="word-item v-1">Wiggins</div>`;
+                h2 += `<div class="word-item v-1">Cusser<span>1.0</span></div>`;
+            } else {
+                h1 += `<div class="word-item"></div>`;
+                h2 += `<div class="word-item"></div>`;
+            }
+
+            for(let i = 0; i < repeats; i++) {
+                adj.forEach(w => h1 += `<div class="word-item v-${Math.floor(Math.random()*6)+1}">${w}</div>`);
+                noun.forEach(w => h2 += `<div class="word-item v-${Math.floor(Math.random()*6)+1}">${w}</div>`);
+            }
+            strip1.innerHTML = h1; strip2.innerHTML = h2;
+            updateDimensions();
+        }
+
+        function updateDimensions() {
+            const h = window.innerHeight / 3;
+            document.querySelectorAll('.word-item').forEach(el => el.style.height = h + 'px');
+            strip1.style.transition = 'none'; strip2.style.transition = 'none';
+
+            if (isFirstLoad) {
+                strip1.style.transform = `translateY(-${h}px)`;
+                strip2.style.transform = `translateY(-${h}px)`;
+            } else {
+                const targetSet = 3;
+                const pos1 = (targetSet * adj.length + currentIdx1 + 2) * h - h;
+                const pos2 = (targetSet * noun.length + currentIdx2 + 2) * h - h;
+                strip1.style.transform = `translateY(-${pos1}px)`;
+                strip2.style.transform = `translateY(-${pos2}px)`;
+            }
+        }
+
+        function spin() {
+            btn.disabled = true;
+            if (isFirstLoad) { isFirstLoad = false; buildStrips(false); }
+
+            const h = window.innerHeight / 3;
+            strip1.style.transition = 'none'; strip2.style.transition = 'none';
+            strip1.style.transform = `translate3d(0, 0, 0)`; 
+            strip2.style.transform = `translate3d(0, 0, 0)`;
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    currentIdx1 = Math.floor(Math.random() * adj.length);
+                    currentIdx2 = Math.floor(Math.random() * noun.length);
+                    const targetSet = 3;
+                    const pos1 = (targetSet * adj.length + currentIdx1 + 2) * h - h;
+                    const pos2 = (targetSet * noun.length + currentIdx2 + 2) * h - h;
+
+                    const bezier = 'cubic-bezier(0.05, 0, 0.01, 1.02)';
+                    strip1.style.transition = `transform 4.0s ${bezier}`;
+                    strip2.style.transition = `transform 4.2s ${bezier}`;
+
+                    strip1.style.transform = `translate3d(0, -${pos1}px, 0)`;
+                    strip2.style.transform = `translate3d(0, -${pos2}px, 0)`;
+                });
+            });
+
+            setTimeout(() => {
+                const adjIdx = (currentIdx1 - 1 + adj.length) % adj.length;
+                const nounIdx = (currentIdx2 - 1 + noun.length) % noun.length;
+                
+                lastWord1 = adj[adjIdx];
+                lastWord2 = noun[nounIdx];
+                
+                speakResult(lastWord1, lastWord2);
+                
+                // Enable UI
+                btn.disabled = false;
+                replayBtn.disabled = false; 
+            }, 4200);
+        }
+
+        buildStrips(true);
+        window.addEventListener('resize', updateDimensions);
+        btn.addEventListener('click', spin);
+    </script>
+</body>
+</html>
